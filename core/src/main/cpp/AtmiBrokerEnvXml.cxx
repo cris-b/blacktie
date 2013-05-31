@@ -281,6 +281,12 @@ static void XMLCALL startElement
 				server->function_name = copy_value(atts[i+1]);
 			} else if(atts[i] && strcmp(atts[i], "done_function") == 0) {
 				server->done_function_name = copy_value(atts[i+1]);
+			} else if(atts[i] && strcmp(atts[i], "xa") == 0) {
+                                if(strcmp(atts[i+1], "true") == 0) {
+                                        server->xa = true;
+                                } else {
+                                        server->xa = false;
+                                }
 			}
 		}
 
