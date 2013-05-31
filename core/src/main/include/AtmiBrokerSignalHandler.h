@@ -33,7 +33,7 @@ public:
 	AtmiBrokerSignalHandler(int* hsignals = default_handlesigs, int* bsignals = default_blocksigs);
 	virtual ~AtmiBrokerSignalHandler();
 
-	virtual int handle_signal(int signum, siginfo_t *, ucontext_t *);
+	virtual int handle_signal(int signum, struct siginfo*, ucontext_t *);
 
 	/**
 	 * Add a handler to be called when one of the signals in the set of handleable signals
