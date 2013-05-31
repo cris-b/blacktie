@@ -27,6 +27,7 @@
 '>
 <!ENTITY linker-args-gcc '
 <linkerarg value="-E" />
+<linkerarg value="-ldl" />
 '>
 <!ENTITY compiler-args-xlC '
 <compilerarg value="-O0" if="debug" />

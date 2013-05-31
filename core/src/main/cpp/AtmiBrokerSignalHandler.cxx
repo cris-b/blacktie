@@ -71,7 +71,7 @@ void AtmiBrokerSignalHandler::addSignalHandler(int (*handler)(int signum), bool 
         handlers_.insert(handlers_.end(), handler);
 }
 
-int AtmiBrokerSignalHandler::handle_signal(int sig, siginfo_t *, ucontext_t *)
+int AtmiBrokerSignalHandler::handle_signal(int sig, struct siginfo *, ucontext_t *)
 {
 	sigset_t* pending = (sigset_t*) getSpecific(TSS_SIG_KEY);
 	std::vector<int (*)(int)>::iterator it;
