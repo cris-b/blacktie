@@ -18,9 +18,7 @@
 
 #include "TestAssert.h"
 #include "testTxAvoid.h"
-#include "OrbManagement.h"
 #include "XAResourceAdaptorImpl.h"
-#include "ace/OS_NS_unistd.h"
 #include "TxManager.h"
 #include "btlogger.h"
 
@@ -30,7 +28,7 @@ void initEnv() {
 #ifdef WIN32
 	::putenv("BLACKTIE_CONFIGURATION=win32");
 #else
-	ACE_OS::putenv("BLACKTIE_CONFIGURATION=linux");
+	putenv("BLACKTIE_CONFIGURATION=linux");
 #endif
 	AtmiBrokerEnv::get_instance();
 }
@@ -99,7 +97,7 @@ void doTwo() {
 
  
 void doThree(long delay) {
-(void) ACE_OS::sleep(delay);
+(void) apr_sleep(apr_time_from_sec(delay));
 }
 
 void doFour() {
@@ -127,7 +125,7 @@ static XID xid = {
 };
 
 
-
+#if 0
 void* doFive() {
 	XARecoveryLog log;
 	CosTransactions::Control_ptr curr = (CosTransactions::Control_ptr) txx_get_control();
@@ -171,9 +169,10 @@ void* doFive() {
 	}
 	return ra;
 }
+#endif
 
 void doSix(long delay) {
-	(void) ACE_OS::sleep(delay);
+	(void) apr_sleep(apr_time_from_sec(delay));
 }
 void doSeven(void* rad) {
 	XAResourceAdaptorImpl * ra = (XAResourceAdaptorImpl *) rad;

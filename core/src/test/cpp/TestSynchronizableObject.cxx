@@ -20,7 +20,6 @@
 #include "TestSynchronizableObject.h"
 
 #include "btlogger.h"
-#include "ace/OS_NS_unistd.h"
 
 Waiter::Waiter() {
 	object = new SynchronizableObject();
@@ -61,31 +60,18 @@ int Waiter::svc(void){
 void TestSynchronizableObject::setUp() {
 	int argc = 0;
 	init_ace();
-	orbRef = CORBA::ORB_init(argc, NULL, "null");
 	waiter = new Waiter();
-	if (waiter->activate(THR_NEW_LWP| THR_JOINABLE, 1, 0, ACE_DEFAULT_THREAD_PRIORITY, -1, 0, 0, 0, 0, 0, 0) != 0) {
-		delete (waiter);
-		waiter = NULL;
-		BT_FAIL("COULD NOT CREATE WAITER");
-	}
 }
 void TestSynchronizableObject::tearDown() {
 	if (waiter) {
-		waiter->wait();
 		delete waiter;
 		waiter = NULL;
 	}
-	if (!CORBA::is_nil(orbRef))
-		orbRef->shutdown(1);
-	if (!CORBA::is_nil(orbRef))
-		orbRef->destroy();
-
-	orbRef = NULL;
 }
 
 void TestSynchronizableObject::testWaitNotify() {
 
-	ACE_OS::sleep(1);
+	apr_sleep(apr_time_from_sec(1));
 	SynchronizableObject* lock = waiter->getLock();
 	SynchronizableObject* lock2 = waiter->getLock2();
 	lock->lock();
@@ -101,7 +87,7 @@ void TestSynchronizableObject::testWaitNotify() {
 }
 
 void TestSynchronizableObject::testNotifyWaitWithTimeout() {
-	ACE_OS::sleep(1);
+	apr_sleep(apr_time_from_sec(1));
 	SynchronizableObject* lock = waiter->getLock();
 	lock->lock();
 	lock->notify();

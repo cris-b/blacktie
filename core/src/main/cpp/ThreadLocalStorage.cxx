@@ -17,45 +17,40 @@
  */
 #include "ThreadLocalStorage.h"
 
-#include "ace/TSS_T.h"
-#include <map>
 #include <iostream>
 
-class TSSData {
-public:
-	~TSSData() {
-	}
-	bool set(int k, void* v) {
-		tssmap[k] = v;
-		return true;
-	}
-	void* get(int k) {
-		return tssmap[k];
-	}
-	bool destroy(int k) {
-		tssmap[k] = 0;
-		return true;
-	}
-
-	std::map<int, void*> tssmap;
-};
-
-static ACE_TSS<TSSData> tss;
+#include "apr_portable.h"
+#include "apr_thread_proc.h"
 
 extern int getKey() {
 	return -1;
 }
 
 extern bool setSpecific(int key, void* threadData) {
-	return tss->set(key, threadData);
+        apr_pool_t* pool;
+        apr_pool_create(&pool,NULL);
+        apr_thread_t* thread;
+        apr_os_thread_t os_th = apr_os_thread_current();
+	apr_os_thread_put(&thread, &os_th, pool);
+	apr_status_t ret = apr_thread_data_set(threadData, (const char*)key, NULL, thread);
+	apr_pool_destroy(pool);
+	return (ret == APR_SUCCESS);
 }
 
 extern void* getSpecific(int key) {
-	return tss->get(key);
+        apr_pool_t* pool;
+        apr_pool_create(&pool,NULL);
+        apr_thread_t* thread;
+        apr_os_thread_t os_th = apr_os_thread_current();
+        apr_os_thread_put(&thread, &os_th, pool);
+        void* threadData = NULL;
+        apr_thread_data_get(&threadData, (const char*)key, thread);
+        apr_pool_destroy(pool);
+	return threadData;
 }
 
 extern bool destroySpecific(int key) {
-	return tss->destroy(key);
+	return setSpecific(key, 0);
 }
 
 char* TSS_TPERESET = (char*) "0";

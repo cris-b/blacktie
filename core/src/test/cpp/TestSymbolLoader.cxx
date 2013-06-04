@@ -30,16 +30,16 @@ void TestSymbolLoader::setUp() {
 	TestFixture::setUp();
 
 #ifdef WIN32
-	ACE_OS::putenv("BLACKTIE_CONFIGURATION=win32");
+	putenv("BLACKTIE_CONFIGURATION=win32");
 #else
-	ACE_OS::putenv("BLACKTIE_CONFIGURATION=linux");
+	putenv("BLACKTIE_CONFIGURATION=linux");
 #endif
 
 }
 
 void TestSymbolLoader::tearDown() {
 	// Perform clean up
-	ACE_OS::putenv("BLACKTIE_CONFIGURATION=");
+	putenv("BLACKTIE_CONFIGURATION=");
 
 	// Perform global clean up
 	TestFixture::tearDown();

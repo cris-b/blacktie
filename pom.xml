@@ -267,12 +267,6 @@
             <dependency>
                 <groupId>org.jboss.narayana.blacktie</groupId>
                 <classifier>${bpa}</classifier>
-                <artifactId>blacktie-idl-tao</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.narayana.blacktie</groupId>
-                <classifier>${bpa}</classifier>
                 <artifactId>blacktie-tx-test-utilities</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -360,7 +354,7 @@
         <module>utils/cpp-plugin</module>
         <module>common</module>
         <module>xsd</module>
-        <module>idl</module>
+	<module>idl</module>
         <module>messaging</module>
         <module>stompconnect-1.0</module>
         <module>jatmibroker-xatmi</module>

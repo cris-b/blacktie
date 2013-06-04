@@ -29,11 +29,6 @@
 #include "AtmiBrokerEnv.h"
 #include "txx.h"
 #include "SymbolLoader.h"
-#include "ace/OS_NS_stdio.h"
-#include "ace/OS_NS_stdlib.h"
-#include "ace/OS_NS_string.h"
-#include "ace/Default_Constants.h"
-#include "ace/Signal.h"
 #include "ThreadLocalStorage.h"
 #include "AtmiBrokerSignalHandler.h"
 #include "apr_general.h"
@@ -56,7 +51,6 @@ int client_sigint_handler_callback(int sig_type) {
 }
 
 int clientinit() {
-	apr_initialize();
 	AtmiBrokerInitSingleton::instance();
 	setSpecific(TPE_KEY, TSS_TPERESET);
 	int toReturn = -1;
