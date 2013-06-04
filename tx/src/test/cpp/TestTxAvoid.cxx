@@ -18,25 +18,24 @@
 
 #include "TestAssert.h"
 #include "testTxAvoid.h"
-#include "OrbManagement.h"
-#include "XAResourceAdaptorImpl.h"
-#include "ace/OS_NS_unistd.h"
 #include "TxManager.h"
 #include "btlogger.h"
 
 #include "AtmiBrokerEnv.h"
 
+#include <stdlib.h>
+
 void initEnv() {	
 #ifdef WIN32
-	::putenv("BLACKTIE_CONFIGURATION=win32");
+	putenv("BLACKTIE_CONFIGURATION=win32");
 #else
-	ACE_OS::putenv("BLACKTIE_CONFIGURATION=linux");
+	putenv("BLACKTIE_CONFIGURATION=linux");
 #endif
 	AtmiBrokerEnv::get_instance();
 }
 
 void destroyEnv(){
-	::putenv((char*) "BLACKTIE_CONFIGURATION=");
+	putenv((char*) "BLACKTIE_CONFIGURATION=");
 	AtmiBrokerEnv::discard_instance();
 }
 
@@ -99,7 +98,7 @@ void doTwo() {
 
  
 void doThree(long delay) {
-(void) ACE_OS::sleep(delay);
+(void) apr_sleep(apr_time_from_sec(delay));
 }
 
 void doFour() {
@@ -127,7 +126,7 @@ static XID xid = {
 };
 
 
-
+#if 0
 void* doFive() {
 	XARecoveryLog log;
 	CosTransactions::Control_ptr curr = (CosTransactions::Control_ptr) txx_get_control();
@@ -171,14 +170,15 @@ void* doFive() {
 	}
 	return ra;
 }
+#endif
 
 void doSix(long delay) {
-	(void) ACE_OS::sleep(delay);
+	(void) apr_sleep(apr_time_from_sec(delay));
 }
 void doSeven(void* rad) {
-	XAResourceAdaptorImpl * ra = (XAResourceAdaptorImpl *) rad;
+	//XAResourceAdaptorImpl * ra = (XAResourceAdaptorImpl *) rad;
 	// the resource should have been committed
-	BT_ASSERT_MESSAGE("resource did not complete", ra->is_complete());
+	//BT_ASSERT_MESSAGE("resource did not complete", ra->is_complete());
 
 }
 

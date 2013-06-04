@@ -163,6 +163,112 @@
 				<SERVICE name='TestTopic' type='topic'/>
 			</SERVICE_NAMES>
 		</SERVER>
+
+<SERVER name='sas'>
+  <SERVICE_NAMES>
+    <SERVICE name='security' size='1'/>
+    <SERVICE name='audit' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='nic'>
+  <SERVICE_NAMES>
+    <SERVICE name='linkcontrol' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='sqm'>
+  <SERVICE_NAMES>
+    <SERVICE name='settleresp'  size='1' externally-managed-destination='true'/>
+    <SERVICE name='gsinitiate' size='1'/>
+    <SERVICE name='sqm_timer' size='1'/>
+    <SERVICE name='control' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='gls'>
+<SERVICE_NAMES>
+<SERVICE name='gscompute' size='1'/>
+</SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='opp'>
+  <SERVICE_NAMES>
+    <SERVICE name='operplan' size='1'/>
+    <SERVICE name='opp_timer' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='pss'>
+  <SERVICE_NAMES>
+    <SERVICE name='settler' size='1'/>
+  </SERVICE_NAMES>
+ </SERVER>
+
+<SERVER name='blk'>
+  <SERVICE_NAMES>
+    <SERVICE name='async'  size='1' externally-managed-destination='true'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='ppspmta'>
+  <SERVICE_NAMES>
+    <SERVICE name='payment01' size='1'  externally-managed-destination='true'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='ppsenqa'>
+  <SERVICE_NAMES>
+    <SERVICE name='enquiry01' size='1'  externally-managed-destination='true'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='ppsgui'>
+  <SERVICE_NAMES>
+    <SERVICE name='payments' size='1'/>
+    <SERVICE name='authorise' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='qry'>
+  <SERVICE_NAMES>
+    <SERVICE name='query' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='cms'>
+ <SERVICE_NAMES>
+  <SERVICE name='dummy' size='1'/>
+ </SERVICE_NAMES>
+</SERVER>
+ 
+<SERVER name='evha'>
+  <SERVICE_NAMES>
+    <SERVICE name='event'  size='1' externally-managed-destination='true'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='std'>
+  <SERVICE_NAMES>
+    <SERVICE name='staticdata' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='fil'>
+  <SERVICE_NAMES>
+    <SERVICE name='netcreate' size='1'/>
+    <SERVICE name='fileauth' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+<SERVER name='osn'>
+  <SERVICE_NAMES>
+    <SERVICE name='osncontrol' size='1'/>
+    <SERVICE name='osn_timer' size='1'/>
+  </SERVICE_NAMES>
+</SERVER>
+
+
 	</SERVERS>
 	<ORB OPT="-ORBInitRef NameService=corbaloc::${jboss.bind.address}:3528/NameService -ORBListenEndpoints iiop://${jboss.bind.address}:0"
 		TRANS_FACTORY_ID="TransactionManagerService.OTS" />

@@ -29,11 +29,8 @@
 #include "XsdValidator.h"
 
 #include "log4cxx/logger.h"
-#include "ace/ACE.h"
-#include "ace/OS_NS_stdlib.h"
-#include "ace/OS_NS_stdio.h"
-#include "ace/OS_NS_string.h"
-#include "ace/Default_Constants.h"
+
+#include "apr_strings.h"
 
 log4cxx::LoggerPtr loggerAtmiBrokerEnvXml(log4cxx::Logger::getLogger(
 		"AtmiBrokerEnvXml"));
@@ -143,9 +140,9 @@ static char * copy_value_impl(char *value) {
 
 	if (s && *(s + 1) == '{' && (e = (char *) strchr(s, '}'))) {
 		size_t esz = e - s - 2;
-		char *en = ACE::strndup(s + 2, esz);
-		char *ev = ACE_OS::getenv(en); /* ACE_OS::getenv(en);*/
-		char *pr = ACE::strndup(value, (s - value));
+		char *en = strndup(s + 2, esz);
+		char *ev = getenv(en); /* getenv(en);*/
+		char *pr = strndup(value, (s - value));
 		size_t rsz;
 		char *v;
 
@@ -158,11 +155,11 @@ static char * copy_value_impl(char *value) {
 				<< (s + 2) << (char *) " and e=" << e << (char *) " and en="
 				<< en << (char *) " and pr=" << pr << (char *) " and ev=" << ev);
 		e += 1;
-		rsz = ACE_OS::strlen(pr) + ACE_OS::strlen(e) + ACE_OS::strlen(ev) + 1; /* add 1 for null terminator */
+		rsz = strlen(pr) + strlen(e) + strlen(ev) + 1; /* add 1 for null terminator */
 		v = (char *) malloc(rsz);
 		LOG4CXX_TRACE(loggerAtmiBrokerEnvXml, "copy_value_impl malloc");
 
-		ACE_OS::snprintf(v, rsz, "%s%s%s", pr, ev, e);
+		apr_snprintf(v, rsz, "%s%s%s", pr, ev, e);
 		LOG4CXX_TRACE(loggerAtmiBrokerEnvXml, value << (char*) " -> " << v);
 
 		free(en);
@@ -180,9 +177,9 @@ static char * copy_value_impl(char *value) {
 
 
 static bool applicable_config(char *config, const char *attribute) {
-	if (config == NULL || ACE_OS::strlen(config) == 0) {
+	if (config == NULL || strlen(config) == 0) {
 		// see if it is set in the environment
-		if ((config = ACE_OS::getenv("BLACKTIE_CONFIGURATION")) == 0)
+		if ((config = getenv("BLACKTIE_CONFIGURATION")) == 0)
 			return false;
 	}
 
@@ -198,9 +195,9 @@ static bool applicable_config(char *config, const char *attribute) {
 
 static bool checkService(char* serverName, const char* serviceName) {
 	for(unsigned int i = 0; i < servers.size(); i ++) {
-		if(ACE_OS::strcmp(serverName, servers[i]->serverName) != 0) {
+		if(strcmp(serverName, servers[i]->serverName) != 0) {
 			for(unsigned int j = 0; j < servers[i]->serviceVector.size(); j ++) {
-				if(ACE_OS::strcmp(serviceName, servers[i]->serviceVector[j].serviceName) == 0 && ACE_OS::strcmp("topic", servers[i]->serviceVector[j].serviceType) != 0)
+				if(strcmp(serviceName, servers[i]->serviceVector[j].serviceName) == 0 && strcmp("topic", servers[i]->serviceVector[j].serviceType) != 0)
 					return true;
 			}
 		}
@@ -528,7 +525,7 @@ static void XMLCALL startElement
 
 			server = servers.back()->serverName;
 			memset(&service, 0, sizeof(ServiceInfo));
-			ACE_OS::strcpy(adm, ".");
+			strcpy(adm, ".");
 
 			service.serviceType = NULL;
 			service.coding_type = NULL;
@@ -540,9 +537,9 @@ static void XMLCALL startElement
 
 			for(int i = 0; atts[i]; i += 2) {
 				if(strcmp(atts[i], "name") == 0) {
-					if(ACE_OS::strstr(atts[i+1], adm) || 
-					   ACE_OS::strcmp(atts[i+1], "BTStompAdmin") == 0 ||
-					   ACE_OS::strcmp(atts[i+1], "BTDomainAdmin") == 0) {
+					if(strstr(atts[i+1], adm) || 
+					   strcmp(atts[i+1], "BTStompAdmin") == 0 ||
+					   strcmp(atts[i+1], "BTDomainAdmin") == 0) {
 						LOG4CXX_WARN(loggerAtmiBrokerEnvXml, (char*) "Can not define " << atts[i+1]);
 						// disable further parsing
 						abortParser();
@@ -737,14 +734,14 @@ bool AtmiBrokerEnvXml::parseXmlDescriptor(
 	if (configurationDir != NULL) {
 		LOG4CXX_TRACE(loggerAtmiBrokerEnvXml, (char*) "read env from dir: "
 				<< configurationDir);
-		ACE_OS::snprintf(aDescriptorFileName, 256, "%s"ACE_DIRECTORY_SEPARATOR_STR_A"btconfig.xml",
+		apr_snprintf(aDescriptorFileName, 256, "%s/btconfig.xml",
 				configurationDir);
 		LOG4CXX_DEBUG(loggerAtmiBrokerEnvXml,
 				(char*) "in parseXmlDescriptor() " << aDescriptorFileName);
 	} else {
 		LOG4CXX_TRACE(loggerAtmiBrokerEnvXml,
 				(char*) "read env from default file");
-		ACE_OS::strcpy(aDescriptorFileName, "btconfig.xml");
+		strcpy(aDescriptorFileName, "btconfig.xml");
 	}
 	configuration = conf;
 
@@ -754,9 +751,9 @@ bool AtmiBrokerEnvXml::parseXmlDescriptor(
 	char schemaPath[256];
 	char* schemaDir;
 
-	schemaDir = ACE_OS::getenv("BLACKTIE_SCHEMA_DIR");
+	schemaDir = getenv("BLACKTIE_SCHEMA_DIR");
 	if (schemaDir) {
-		ACE_OS::snprintf(schemaPath, 256, "%s"ACE_DIRECTORY_SEPARATOR_STR_A"btconfig.xsd", schemaDir);
+		apr_snprintf(schemaPath, 256, "%s/btconfig.xsd", schemaDir);
 	} else {
 		LOG4CXX_ERROR(loggerAtmiBrokerEnvXml,
 				(char*) "BLACKTIE_SCHEMA_DIR is not set, cannot validate configuration");

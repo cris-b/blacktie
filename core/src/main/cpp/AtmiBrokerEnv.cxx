@@ -27,11 +27,6 @@
 #include "AtmiBrokerEnvXml.h"
 #include "SynchronizableObject.h"
 #include "log4cxx/logger.h"
-#include "ace/ACE.h"
-#include "ace/OS_NS_stdlib.h"
-#include "ace/OS_NS_stdio.h"
-#include "ace/OS_NS_string.h"
-#include "ace/Default_Constants.h"
 
 log4cxx::LoggerPtr loggerAtmiBrokerEnv(log4cxx::Logger::getLogger(
 		"AtmiBrokerEnv"));
@@ -135,8 +130,8 @@ AtmiBrokerEnv::AtmiBrokerEnv() {
 	LOG4CXX_DEBUG(loggerAtmiBrokerEnv, (char*) "constructor");
 	readEnvironment = false;
 
-	set_environment_dir(ACE_OS::getenv("BLACKTIE_CONFIGURATION_DIR"));
-	set_configuration(ACE_OS::getenv("BLACKTIE_CONFIGURATION"));
+	set_environment_dir(getenv("BLACKTIE_CONFIGURATION_DIR"));
+	set_configuration(getenv("BLACKTIE_CONFIGURATION"));
 
 	try {
 		readenv();
@@ -289,7 +284,7 @@ AtmiBrokerEnv::getTransportLibrary(char* serviceName) {
 			std::vector<ServiceInfo>* services = &(*server)->serviceVector;
 			for (std::vector<ServiceInfo>::iterator i = services->begin(); i
 					!= services->end(); i++) {
-				if (ACE_OS::strncmp((*i).serviceName, serviceName, 128) == 0) {
+				if (strncmp((*i).serviceName, serviceName, 128) == 0) {
 					return (*i).transportLib;
 				}
 			}
@@ -307,7 +302,7 @@ AtmiBrokerEnv::getServiceType(char* serviceName) {
 			std::vector<ServiceInfo>* services = &(*server)->serviceVector;
 			for (std::vector<ServiceInfo>::iterator i = services->begin(); i
 					!= services->end(); i++) {
-				if (ACE_OS::strncmp((*i).serviceName, serviceName, 128) == 0) {
+				if (strncmp((*i).serviceName, serviceName, 128) == 0) {
 					return (*i).serviceType;
 				}
 			}
@@ -325,7 +320,7 @@ AtmiBrokerEnv::getCodingType(char* serviceName) {
 			std::vector<ServiceInfo>* services = &(*server)->serviceVector;
 			for (std::vector<ServiceInfo>::iterator i = services->begin(); i
 					!= services->end(); i++) {
-				if (ACE_OS::strncmp((*i).serviceName, serviceName, 128) == 0) {
+				if (strncmp((*i).serviceName, serviceName, 128) == 0) {
 					return (*i).coding_type;
 				}
 			}
@@ -374,8 +369,8 @@ int AtmiBrokerEnv::putenv(char* anEnvNameValue) {
 	char *p = strchr(anEnvNameValue, '=');
 	envVar_t envVar;
 
-	envVar.name = ACE::strndup(anEnvNameValue, (size_t)(p - anEnvNameValue));
-	envVar.value = ACE::strndup(p + 1, (int) (strlen(anEnvNameValue)
+	envVar.name = strndup(anEnvNameValue, (size_t)(p - anEnvNameValue));
+	envVar.value = strndup(p + 1, (int) (strlen(anEnvNameValue)
 			- strlen(p)));
 	envVariableInfoSeq.push_back(envVar);
 

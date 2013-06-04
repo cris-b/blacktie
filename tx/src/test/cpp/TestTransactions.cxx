@@ -52,7 +52,6 @@ void TestTransactions::setUp()
 {
 	apr_initialize();
 	fault_t fault = {-1};
-	init_ace();
 
 	txx_stop();
 	initEnv();
@@ -421,7 +420,7 @@ void TestTransactions::test_register_resource()
 	BT_ASSERT_EQUAL(TX_OK, tx_open());
 	BT_ASSERT_EQUAL(TX_OK, tx_begin());
 
-	void* ra = doFive();
+	void* ra = NULL; /* doFive() - http tx */
 
 	// commit the transaction
 	BT_ASSERT_EQUAL(TX_OK, tx_commit());

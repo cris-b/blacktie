@@ -22,12 +22,13 @@
 #include "btlogger.h"
 #include "AtmiBrokerEnv.h"
 
+#include <stdlib.h>
+
 void messagesAvailableCallback(int bar, bool remove) {
 
 }
 
 void TestStompConnection::setUp() {
-	init_ace();
 	btlogger("TestStompConnection::setUp");
 
 	serverConnection = NULL;
@@ -74,6 +75,7 @@ void TestStompConnection::testLibStomp() {
 		clientSend.type = (char*) "X_OCTET";
 		clientSend.subtype = (char*) "";
 		clientSend.ttl = 20 * 1000;
+                clientSend.schedtime = -1;
 		clientSend.control = NULL;
 		clientSend.xid = NULL;
 		clientSend.syncRcv = 0;
@@ -120,6 +122,7 @@ void TestStompConnection::test() {
 		clientSend.type = (char*) "X_OCTET";
 		clientSend.subtype = (char*) "";
 		clientSend.ttl = 10 * 1000;
+                clientSend.schedtime = -1;
 		clientSend.control = NULL;
 		clientSend.xid = NULL;
 		clientSend.syncRcv = 0;
@@ -144,6 +147,7 @@ void TestStompConnection::test() {
 		char* serviceData = (char*) malloc(4);
 		memset(serviceData, '\0', 4);
 		strcpy(serviceData, "bye");
+                serviceSend.schedtime = -1;
 		serviceSend.data = serviceData;
 		serviceSend.correlationId = 0;
 		serviceSend.flags = 0;
@@ -182,6 +186,7 @@ void TestStompConnection::test() {
 		clientSend.len = 4;
 		clientSend.priority = 0;
 		clientSend.ttl = 20 * 1000;
+                clientSend.schedtime = -1;
 		clientSend.replyto = client->getReplyTo();
 		clientSend.type = (char*) "X_OCTET";
 		clientSend.subtype = (char*) "";
