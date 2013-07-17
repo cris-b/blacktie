@@ -29,15 +29,15 @@ void* lookup_symbol(const char *lib, const char *symbol) {
 //		return 0;
 
 	//void* dll = ::dlopen (NULL, RTLD_NOW);
-	apr_pool_t* pool;
+	apr_pool_t* pool = NULL;
 	apr_pool_create(&pool,NULL);
 
 
-	apr_dso_handle_t* handle;
+	apr_dso_handle_t* handle = NULL;
 	
 	apr_status_t res = apr_dso_load(&handle, lib, pool);
 
-        apr_dso_handle_sym_t* sym = NULL;
+        apr_dso_handle_sym_t sym;
 
 	if (res != APR_SUCCESS) {
 		LOG4CXX_ERROR(symbolLoaderLogger, (char*) "lookup_symbol: " << symbol
@@ -48,7 +48,7 @@ void* lookup_symbol(const char *lib, const char *symbol) {
 
 	try {
 		//sym = ::dlsym (dll, symbol);//
-		res = apr_dso_sym(sym, handle, symbol);
+		res = apr_dso_sym(&sym, handle, symbol);
 
 		if (res != APR_SUCCESS) {
 			LOG4CXX_ERROR(symbolLoaderLogger, (char*) "lookup_symbol: "

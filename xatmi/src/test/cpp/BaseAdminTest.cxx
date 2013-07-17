@@ -21,6 +21,8 @@
 #include "btlogger.h"
 #include "BaseAdminTest.h"
 
+#include <stdlib.h>
+
 void BaseAdminTest::setUp() {
 	BaseServerTest::setUp();
 }

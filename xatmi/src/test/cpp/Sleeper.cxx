@@ -18,6 +18,7 @@
 
 #include "Sleeper.h"
 #include "btlogger.h"
+#include <apr_time.h>
 
 void sleeper(int timeout) {
 	btlogger((char*) "sleeper, sleeping for %d seconds", timeout);

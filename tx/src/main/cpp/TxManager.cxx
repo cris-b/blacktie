@@ -50,8 +50,8 @@ TxManager *TxManager::get_instance()
 			LOG4CXX_DEBUG(txmlogger,
 				(char*) "Using RTS for transaction support with manager endpoint: " <<
 				txnConfig.mgrEP << " and participant endpoint: " << txnConfig.resourceEP);
-		} else if (orbConfig.transactionFactoryName == NULL) {
-			LOG4CXX_WARN(txmlogger, (char*) "Please make sure Transaction factory name is set in btconfig,xml");
+		} else {
+			LOG4CXX_FATAL(txmlogger, (char*) "Please make sure TXN_CFG is set in btconfig,xml");
 		}
 		AtmiBrokerEnv::discard_instance();
 	}

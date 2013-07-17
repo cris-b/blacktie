@@ -24,6 +24,8 @@ extern "C" {
 #include "btclient.h"
 }
 
+#include <stdlib.h>
+
 void TestClientInit::test_clientinit() {
 	btlogger((char*) "TestClientInit::test_clientinit");
 	BT_ASSERT(tperrno == 0);

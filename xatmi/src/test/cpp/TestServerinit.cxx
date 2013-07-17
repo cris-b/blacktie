@@ -20,6 +20,8 @@
 #include "AtmiBrokerServer.h"
 #include "btclient.h"
 
+#include <stdlib.h>
+
 #if defined(__cplusplus)
 extern "C" {
 #endif

@@ -24,8 +24,8 @@
 
 #include "malloc.h"
 #include <string.h>
+#include <stdlib.h>
 void TestAtmiBrokerXml::setUp() {
-	init_ace();
 	// Perform global set up
 	TestFixture::setUp();
 }

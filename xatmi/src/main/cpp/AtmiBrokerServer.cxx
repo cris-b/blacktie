@@ -110,6 +110,9 @@ void parsecmdline(int argc, char** argv) {
     int optch;
     const char *optarg;
 
+    /* initialize apr_getopt_t */
+    apr_getopt_init(&opt, mp, argc, argv);
+
 	configFromCmdline = false;
 	while ( (apr_getopt_long(opt, opt_option, &optch, &optarg)) == APR_SUCCESS ) {
 		switch ( optch) {
@@ -131,6 +134,8 @@ void parsecmdline(int argc, char** argv) {
 			break;
 		}
 	}
+
+   apr_pool_destroy(mp);
 }
 
 const char* getConfiguration() {

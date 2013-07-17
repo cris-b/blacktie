@@ -48,8 +48,15 @@ AtmiBrokerInit::AtmiBrokerInit() {
     btlogger_init();
 
 	logger = log4cxx::Logger::getLogger("AtmiBrokerInit");
-	LOG4CXX_DEBUG(logger, (char*) "Constructed");
-	apr_initialize();
+
+        apr_status_t rc = apr_initialize();
+        if (rc != APR_SUCCESS) {
+                LOG4CXX_ERROR(logger, (char*) "Could not initialize: " << rc);
+                throw new std::exception();
+        }
+        LOG4CXX_TRACE(logger, (char*) "Initialized apr");
+
+        LOG4CXX_DEBUG(logger, (char*) "Constructed");
 }
 
 AtmiBrokerInit::~AtmiBrokerInit() {

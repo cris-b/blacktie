@@ -52,7 +52,6 @@ void TestTransactions::setUp()
 {
 	apr_initialize();
 	fault_t fault = {-1};
-	init_ace();
 
 	txx_stop();
 	initEnv();

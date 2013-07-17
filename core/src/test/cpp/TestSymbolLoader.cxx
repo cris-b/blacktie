@@ -22,9 +22,9 @@
 #include "AtmiBrokerEnv.h"
 #include "btlogger.h"
 #include "SymbolLoader.h"
+#include <stdlib.h>
 
 void TestSymbolLoader::setUp() {
-	init_ace();
 
 	// Perform global set up
 	TestFixture::setUp();

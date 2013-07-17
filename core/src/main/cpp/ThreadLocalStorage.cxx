@@ -18,34 +18,69 @@
 #include "ThreadLocalStorage.h"
 
 #include <iostream>
+#include <map>
 
 #include "apr_portable.h"
 #include "apr_thread_proc.h"
+
+std::map<apr_os_thread_t, apr_pool_t*> tls_pools;
+
+apr_pool_t* mutex_pool = NULL;
+apr_thread_mutex_t* mutex = NULL;
 
 extern int getKey() {
 	return -1;
 }
 
 extern bool setSpecific(int key, void* threadData) {
-        apr_pool_t* pool;
-        apr_pool_create(&pool,NULL);
-        apr_thread_t* thread;
         apr_os_thread_t os_th = apr_os_thread_current();
-	apr_os_thread_put(&thread, &os_th, pool);
-	apr_status_t ret = apr_thread_data_set(threadData, (const char*)key, NULL, thread);
-	apr_pool_destroy(pool);
+
+        std::map<apr_os_thread_t, apr_pool_t*>::iterator it = tls_pools.find(os_th);
+       
+        apr_pool_t * tls_pool = NULL;
+ 
+        if(it == tls_pools.end())
+        {
+          apr_pool_create(&tls_pool,NULL);
+	  
+	  if(mutex == NULL)
+	  {
+	    apr_pool_create(&mutex_pool,NULL);
+	    apr_thread_mutex_create(&mutex, 0, mutex_pool);
+	  }
+          apr_thread_mutex_lock(mutex);
+          tls_pools.insert(std::make_pair<apr_os_thread_t, apr_pool_t*>(os_th,tls_pool));
+	  apr_thread_mutex_unlock(mutex);
+
+        }
+        else
+           tls_pool = it->second;
+
+        apr_thread_t* thread = NULL;
+	apr_os_thread_put(&thread, &os_th, tls_pool);
+	apr_status_t ret = apr_thread_data_set(threadData, (const char*)&key, NULL, thread);
 	return (ret == APR_SUCCESS);
 }
 
 extern void* getSpecific(int key) {
-        apr_pool_t* pool;
-        apr_pool_create(&pool,NULL);
-        apr_thread_t* thread;
         apr_os_thread_t os_th = apr_os_thread_current();
-        apr_os_thread_put(&thread, &os_th, pool);
+
+        std::map<apr_os_thread_t, apr_pool_t*>::iterator it = tls_pools.find(os_th);
+        
+        apr_pool_t * tls_pool = NULL; 
+        if(it == tls_pools.end())
+        {
+          return NULL;
+        }
+        else
+        {
+           tls_pool = it->second;
+        }
+
+        apr_thread_t* thread = NULL;
+        apr_os_thread_put(&thread, &os_th, tls_pool);
         void* threadData = NULL;
-        apr_thread_data_get(&threadData, (const char*)key, thread);
-        apr_pool_destroy(pool);
+        apr_thread_data_get(&threadData, (const char*)&key, thread);
 	return threadData;
 }
 

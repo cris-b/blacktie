@@ -16,6 +16,7 @@
  * MA  02110-1301, USA.
  */
 
+#include <apr-1/apr_time.h>
 #include "Sleeper.h"
 #include "btlogger.h"
 

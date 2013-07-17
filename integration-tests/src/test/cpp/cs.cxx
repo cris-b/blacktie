@@ -293,6 +293,9 @@ static int lotsofwork(int nthreads, apr_thread_start_t tfunc, thr_arg_t* arg) {
 	if(apr_pool_create(&pool,NULL) != APR_SUCCESS)
 		btlogger("Unable to create apr pool\n");
 
+        if(apr_thread_mutex_create(&mutex_,0, pool) != APR_SUCCESS)
+                btlogger("Unable to initialise mutex\n");
+
 	btlogger("lotsofwork: spawning %d threads\n", nthreads);
 	// spawn nthreads threads
 	for(i = 0; i < nthreads; i++)
@@ -605,6 +608,12 @@ int run_server(int argc, char **argv) {
 
 int main(int argc, char **argv) {
 	int i;
+
+#ifdef WIN32    
+        putenv("BLACKTIE_CONFIGURATION=win32");
+#else
+        putenv("BLACKTIE_CONFIGURATION=linux");
+#endif
 
 	for (i = 0; i < argc; i++) {
 		if (strcmp(argv[i], "-i") == 0)

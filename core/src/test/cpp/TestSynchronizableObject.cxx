@@ -59,7 +59,6 @@ int Waiter::svc(void){
 
 void TestSynchronizableObject::setUp() {
 	int argc = 0;
-	init_ace();
 	waiter = new Waiter();
 }
 void TestSynchronizableObject::tearDown() {

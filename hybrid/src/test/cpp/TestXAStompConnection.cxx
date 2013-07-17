@@ -22,6 +22,8 @@
 #include "btlogger.h"
 #include "AtmiBrokerEnv.h"
 
+#include <stdlib.h>
+
 #include "atmiBrokerTxMacro.h"
 #ifdef __cplusplus
 extern "C" {
@@ -42,7 +44,6 @@ void messagesAvailableCallbackXA(int bar, bool remove) {
 }
 
 void TestXAStompConnection::setUp() {
-	init_ace();
 	btlogger("TestXAStompConnection::setUp");
 
 	serverConnection = NULL;
@@ -96,6 +97,7 @@ void TestXAStompConnection::test() {
 		clientSend.type = (char*) "X_OCTET";
 		clientSend.subtype = (char*) "";
 		clientSend.ttl = 120 * 1000;
+                clientSend.schedtime = -1;
 		clientSend.control = NULL;
 		long discardTxTTL = -1;
 		clientSend.xid = txx_serialize(&discardTxTTL);
@@ -128,6 +130,7 @@ void TestXAStompConnection::test() {
 		message.subtype = NULL;
 		message.received = false;
 		message.ttl = -1;
+                message.schedtime = -1;
 		message.serviceName = NULL;
 		message.messageId = NULL;
 		message.syncRcv = 1;
@@ -162,6 +165,7 @@ void TestXAStompConnection::test() {
 		message.subtype = NULL;
 		message.received = false;
 		message.ttl = -1;
+                message.schedtime = -1;
 		message.serviceName = NULL;
 		message.messageId = NULL;
 		message.syncRcv = 1;
