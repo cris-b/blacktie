@@ -56,6 +56,7 @@ HttpTxManager::HttpTxManager(const char *txmUrl, const char *resUrl) :
 	FTRACE(httptxlogger, "ENTER HttpTxManager constructor");
 	_txmUrl = strdup(txmUrl);
 	_resUrl = strdup(resUrl);
+	_ws = NULL;
 	int rc = apr_pool_create(&_pool, NULL);
 	if (rc != APR_SUCCESS) {
 		LOG4CXX_WARN(httptxlogger, "can not create pool");
